@@ -25,12 +25,14 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (Input.GetMouseButtonDown(0)) {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            //Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            //RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100f)) {
+            //if (Physics.Raycast(ray, out hit, 100f)) {
 
-            }
+            //}
+            motor.Attack();
+            print("mouse");
         }
     }
 }

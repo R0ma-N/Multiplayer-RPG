@@ -5,8 +5,14 @@ public class UnitAnimation : MonoBehaviour {
 
     [SerializeField] Animator animator;
     [SerializeField] NavMeshAgent agent;
-	
-	void FixedUpdate () {
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+    }
+
+    void FixedUpdate () {
 		if (!agent.hasPath) {
             animator.SetBool("Moving", false);
         } else {
@@ -14,8 +20,14 @@ public class UnitAnimation : MonoBehaviour {
         }
     }
 
+    public void Attack1()
+    {
+        animator.SetTrigger("Attack");
+    }
+
     //Placeholder functions for Animation events
-    void Hit() {
+    public void Hit() {
+        
     }
 
     void FootR() {
