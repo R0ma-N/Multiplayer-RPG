@@ -12,6 +12,7 @@ sealed class CameraController : MonoBehaviour {
     float currentZoom = 15f;
     float currentRot = 0f;
     float prevMouseX;
+    bool hasTarget;
 
     public Transform target { set { m_target = value; } }
 
