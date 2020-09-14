@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
 
-sealed class CameraController : MonoBehaviour {
+public class CameraController : MonoBehaviour {
 
-    [SerializeField] Transform m_target;
     [SerializeField] Vector3 offset;
     [SerializeField] float zoomSpeed = 4f;
     [SerializeField] float minZoom = 5f;
     [SerializeField] float maxZoom = 15f;
     [SerializeField] float pitch = 2f;
 
+    Transform m_target;
     float currentZoom = 15f;
     float currentRot = 0f;
     float prevMouseX;
-    bool hasTarget;
 
     public Transform target { set { m_target = value; } }
 
     private void Start()
     {
-        target = FindObjectOfType<PlayerController>().transform;
+        m_target = FindObjectOfType<PlayerController>().transform;
     }
 
     void Update() {

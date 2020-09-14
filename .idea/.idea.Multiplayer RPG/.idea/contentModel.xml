@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Roman\AppData\Local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Roman\AppData\Local\JetBrains\Rider2020.2\resharper-host\Local\Transient\Rider\v202\SolutionCaches\_Multiplayer RPG.1709913290.00" t="ExcludeRecursive" />
+    <e p="D:\Unity\GB\Multiplayer RPG" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Additional Assets" t="Include">
+          <e p="Warrior Pack Bundle 3 FREE" t="Include">
+            <e p="Code" t="Include">
+              <e p="IKHands.cs" t="Include" />
+              <e p="SmoothFollow.cs" t="Include" />
+              <e p="WarriorAnimationDemoFREE.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="EffectExamples" t="Include">
+          <e p="Editor" t="Include">
+            <e p="PackageManagerAssembly" t="Include">
+              <e p="PackageImportList.txt" t="Include" />
+            </e>
+          </e>
+          <e p="Shared" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="DecalDestroyer.cs" t="Include" />
+              <e p="ExtinguishableFire.cs" t="Include" />
+              <e p="GunAim.cs" t="Include" />
+              <e p="GunShoot.cs" t="Include" />
+              <e p="ParticleCollision.cs" t="Include" />
+              <e p="ParticleExamples.cs" t="Include" />
+              <e p="ParticleMenu.cs" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="SurfaceShader_VC.shader" t="Include" />
+            </e>
+          </e>
+          <e p="TutorialInfo" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="Editor" t="Include">
+                <e p="ReadmeEditor.cs" t="Include" />
+              </e>
+              <e p="Readme.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Materials" t="Include">
+          <e p="NewUnlitShader.shader" t="Include" />
+        </e>
+        <e p="Medieval Kingdom" t="Include">
+          <e p="Shaders" t="Include">
+            <e p="beffio_BaseShader.shader" t="Include" />
+            <e p="beffio_Fabric.shader" t="Include" />
+            <e p="beffio_Fire.shader" t="Include" />
+            <e p="beffio_Ground_Blending.shader" t="Include" />
+            <e p="beffio_Parallax.shader" t="Include" />
+            <e p="beffio_Shafts.shader" t="Include" />
+            <e p="beffio_Stones.shader" t="Include" />
+            <e p="beffio_Trees.shader" t="Include" />
+            <e p="beffio_Vegetation.shader" t="Include" />
+            <e p="beffio_Water.shader" t="Include" />
+          </e>
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="AxesManager.cs" t="Include" />
+          <e p="CameraController.cs" t="Include" />
+          <e p="NetPlayerSetup.cs" t="Include" />
+          <e p="PlayerController.cs" t="Include" />
+          <e p="UnitAnimation.cs" t="Include" />
+          <e p="UnitLoader.cs" t="Include" />
+          <e p="UnitMotor.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Multiplayer RPG.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
