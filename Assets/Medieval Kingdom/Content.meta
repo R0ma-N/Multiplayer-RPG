@@ -1,8 +1,14 @@
 fileFormatVersion: 2
 guid: b91c0a75bedcadf47a531bff538b169c
 folderAsset: yes
+<<<<<<< HEAD
+<<<<<<<< HEAD:Assets/Medieval Kingdom/Content.meta
 timeCreated: 1522857380
 licenseType: Store
+========
+>>>>>>>> Lesson_2:Assets/Additional Assets/Items.meta
+=======
+>>>>>>> Lesson_2
 DefaultImporter:
   externalObjects: {}
   userData: 

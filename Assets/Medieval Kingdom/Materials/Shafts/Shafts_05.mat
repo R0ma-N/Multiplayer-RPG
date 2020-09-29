@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Shafts_05
   m_Shader: {fileID: 4800000, guid: 7b2fcea9440ee244d8726c0f0af0b03f, type: 3}
   m_ShaderKeywords: 
@@ -96,7 +97,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EdgeLength: 15
-    - _Emmisionlevel: 18.9
+    - _Emmisionlevel: 2.8
     - _Float0: 0.69
     - _Float1: 1
     - _Frequency: 1
