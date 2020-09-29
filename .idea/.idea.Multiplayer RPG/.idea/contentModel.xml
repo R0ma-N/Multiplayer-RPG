@@ -45,9 +45,6 @@
             </e>
           </e>
         </e>
-        <e p="Materials" t="Include">
-          <e p="NewUnlitShader.shader" t="Include" />
-        </e>
         <e p="Medieval Kingdom" t="Include">
           <e p="Shaders" t="Include">
             <e p="beffio_BaseShader.shader" t="Include" />

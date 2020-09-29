@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 3919508866347360883}
   - component: {fileID: 6848717118499638068}
   - component: {fileID: 2808938239747335633}
+  - component: {fileID: 114874726201545010}
   m_Layer: 0
   m_Name: Player_Barbarian
   m_TagString: Player
@@ -247,6 +248,19 @@ MonoBehaviour:
   disableBeheviors:
   - {fileID: 2243056174963970488}
   - {fileID: 6262029526908967542}
+--- !u!114 &114874726201545010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2243056174963970491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96e4fd92e71b19c41b63856ddc48eb42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
 --- !u!1001 &2243056174916519017
 PrefabInstance:
   m_ObjectHideFlags: 0

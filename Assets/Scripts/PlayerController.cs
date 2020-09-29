@@ -1,38 +1,63 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
-[RequireComponent(typeof(UnitMotor))]
-sealed class PlayerController : MonoBehaviour {
+sealed class PlayerController : NetworkBehaviour {
 
     [SerializeField] LayerMask movementMask;
 
+    Character character;
     Camera cam;
-    UnitMotor motor;
 
-    void Start () {
+    private void Awake()
+    {
         cam = Camera.main;
-        motor = GetComponent<UnitMotor>();
-        cam.GetComponent<CameraController>().target = transform;
     }
-	
-	void Update () {
-        if (Input.GetMouseButtonDown(1)) {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100f, movementMask)) {
-                motor.MoveToPoint(hit.point);
+    public void SetCharacter(Character character, bool isLocalPlayer)
+    {
+        this.character = character;
+        if (isLocalPlayer) cam.GetComponent<CameraController>().target = character.transform;
+    }
+
+    void Update () {
+        if (isLocalPlayer)
+        {
+            if (character != null)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(ray, out hit, 100f, movementMask))
+                    {
+                        CmdSetMovePoint(hit.point);
+                    }
+                }
+            if (Input.GetMouseButtonDown(0)) 
+                {
+                //Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+                //RaycastHit hit;
+
+                //if (Physics.Raycast(ray, out hit, 100f)) {
+
+                //}
+                //motor.Attack();
+                //print("mouse");
+                }
             }
         }
 
-        if (Input.GetMouseButtonDown(0)) {
-            //Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            //RaycastHit hit;
+    }
 
-            //if (Physics.Raycast(ray, out hit, 100f)) {
+    [Command]
+    public void CmdSetMovePoint(Vector3 point)
+    {
+        character.SetMovePoint(point);
+    }
 
-            //}
-            motor.Attack();
-            print("mouse");
-        }
+    private void OnDestroy()
+    {
+        if (character != null) Destroy(character.gameObject);
     }
 }
