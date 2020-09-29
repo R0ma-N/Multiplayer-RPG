@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(UnitMotor))]
-public class PlayerController : MonoBehaviour {
+sealed class PlayerController : MonoBehaviour {
 
     [SerializeField] LayerMask movementMask;
 

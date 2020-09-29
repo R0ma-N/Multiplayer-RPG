@@ -2,14 +2,14 @@
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class UnitMotor : MonoBehaviour {
+sealed class UnitMotor : MonoBehaviour {
 
     NavMeshAgent agent;
     UnitAnimation animation;
 
     void Start () {
         agent = GetComponent<NavMeshAgent>();
-        animation = GetComponent<UnitAnimation>();
+        animation = GetComponentInChildren<UnitAnimation>();
 	}
 	
 	public void MoveToPoint(Vector3 point) {

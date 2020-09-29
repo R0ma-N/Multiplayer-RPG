@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitAnimation : MonoBehaviour {
-
+sealed class UnitAnimation : MonoBehaviour {
+    private const string Moving = "Moving";
     [SerializeField] Animator animator;
     [SerializeField] NavMeshAgent agent;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponentInParent<NavMeshAgent>();
     }
 
     void FixedUpdate () {
 		if (!agent.hasPath) {
-            animator.SetBool("Moving", false);
+            animator.SetBool(Moving, false);
         } else {
-            animator.SetBool("Moving", true);
+            animator.SetBool(Moving, true);
         }
     }
 
