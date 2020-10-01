@@ -15,26 +15,29 @@ public class CameraController : MonoBehaviour {
 
     public Transform target { set { m_target = value; } }
 
-    private void Start()
+    void Update()
     {
-        m_target = FindObjectOfType<PlayerController>().transform;
-    }
 
-    void Update() {
-
+        if (m_target != null)
+        {
             currentZoom -= Input.GetAxis(AxesManager.MouseScroll) * zoomSpeed;
             currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
 
-            if (Input.GetMouseButton(2)) {
+            if (Input.GetMouseButton(2))
+            {
                 currentRot += Input.mousePosition.x - prevMouseX;
             }
-
+        }
         prevMouseX = Input.mousePosition.x;
     }
 
-    void LateUpdate() {
-        transform.position = m_target.position - offset * currentZoom;
-        transform.LookAt(m_target.position + Vector3.up * pitch);
-        transform.RotateAround(m_target.position, Vector3.up, currentRot);
+    void LateUpdate() 
+    {
+        if (m_target != null)
+        {
+            transform.position = m_target.position - offset * currentZoom;
+            transform.LookAt(m_target.position + Vector3.up * pitch);
+            transform.RotateAround(m_target.position, Vector3.up, currentRot);
+        }
     }
 }

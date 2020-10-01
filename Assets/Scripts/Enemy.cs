@@ -48,7 +48,23 @@ public class Enemy : Unit
     protected override void OnAliveUpdate()
     {
         base.OnAliveUpdate();
-        Wandering(Time.deltaTime);
+        if (focus == null)
+        {
+            Wandering(Time.deltaTime);
+            if (aggressive) FindEnemy();
+        }
+        else
+        {
+            float distance = Vector3.Distance(focus.interactionTransform.position, transform.position);
+            if (distance > viewDistance || !focus.hasInteract)
+            {
+                RemoveFocus();
+            }
+            else if (distance <= focus.radius)
+            {
+                focus.Interact(gameObject);
+            }
+        }
     }
 
     protected override void Revive()
@@ -75,5 +91,36 @@ public class Enemy : Unit
     {
         curDistanation = Quaternion.AngleAxis(Random.Range(0f, 360f), Vector3.up) * new Vector3(moveRadius, 0, 0) + startPosition;
         motor.MoveToPoint(curDistanation);
+    }
+
+    void FindEnemy()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, viewDistance, 1 << LayerMask.NameToLayer("Player"));
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Interactable interactable = colliders[i].GetComponent<Interactable>();
+            if (interactable != null && interactable.hasInteract)
+            {
+                SetFocus(interactable);
+                break;
+            }
+        }
+    }
+
+    public override bool Interact(GameObject user)
+    {
+        if (base.Interact(user))
+        {
+            SetFocus(user.GetComponent<Interactable>());
+            return true;
+        }
+        return false;
+    }
+
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, viewDistance);
     }
 }

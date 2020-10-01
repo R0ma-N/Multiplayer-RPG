@@ -65,7 +65,7 @@ MonoBehaviour:
     i14: 0
     i15: 0
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  m_LocalPlayerAuthority: 0
 --- !u!114 &4663405183712311611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 2243056174963970491, guid: 79c791fe645ef134098a72d3eed6079f,
     type: 3}
-  controller: {fileID: 0}
+  controller: {fileID: 114752288133773892}
 --- !u!114 &114752288133773892
 MonoBehaviour:
   m_ObjectHideFlags: 0
