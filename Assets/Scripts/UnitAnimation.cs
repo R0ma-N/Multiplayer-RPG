@@ -2,7 +2,7 @@
 using UnityEngine.AI;
 
 sealed class UnitAnimation : MonoBehaviour {
-    private const string Moving = "Moving";
+    private const string Move = "Move";
     [SerializeField] Animator animator;
     [SerializeField] NavMeshAgent agent;
 
@@ -14,9 +14,9 @@ sealed class UnitAnimation : MonoBehaviour {
 
     void FixedUpdate () {
 		if (!agent.hasPath) {
-            animator.SetBool(Moving, false);
+            animator.SetBool(Move, false);
         } else {
-            animator.SetBool(Moving, true);
+            animator.SetBool(Move, true);
         }
     }
 

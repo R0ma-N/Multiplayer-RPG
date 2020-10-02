@@ -14,6 +14,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Assets/Scripts/UnitLoader.cs" />
+        <option value="$PROJECT_DIR$/Assets/Materials/NewUnlitShader.shader" />
+        <option value="$PROJECT_DIR$/Assets/Materials/NewUnlitShader 1.shader" />
       </list>
     </option>
   </component>
@@ -65,7 +67,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1600089560703</updated>
-      <workItem from="1600089571041" duration="747000" />
+      <workItem from="1600089571041" duration="1600000" />
+      <workItem from="1600153583890" duration="7000" />
     </task>
     <servers />
   </component>
