@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5d53a90055d7c246b61027458b7dd3e, type: 3}
+  m_Name: Dark Sword
+  m_EditorClassIdentifier: 
+  name: Dark Sword
+  icon: {fileID: 21300000, guid: 72235a1d910334ac4acc647da195e214, type: 3}
+  pickupPrefab: {fileID: 5981250935634149377, guid: 14bf0d3e092c9e84196e60f4344bd40a,
+    type: 3}
