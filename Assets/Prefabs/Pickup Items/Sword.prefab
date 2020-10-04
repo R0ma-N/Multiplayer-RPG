@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 0
+  m_TransformSyncMode: 1
   m_SendInterval: 0.1
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
@@ -102,9 +102,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3043d0a1cf642fb48b4a5ade34bbfde8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionTransform: {fileID: 0}
+  interactionTransform: {fileID: 5981250935634149382}
   radius: 2
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 6faf59747a73bbf4fbc083ff19ed3aa5, type: 2}
 --- !u!65 &5981250935634149378
 BoxCollider:
   m_ObjectHideFlags: 0
