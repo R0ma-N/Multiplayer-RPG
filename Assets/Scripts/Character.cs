@@ -1,24 +1,91 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Character : MonoBehaviour
+[RequireComponent(typeof(UnitMotor), typeof(PlayerStats))]
+public class Character : Unit
 {
-    // Start is called before the first frame update
+    [SerializeField] float reviveDelay = 5f;
+    [SerializeField] GameObject gfx;
+
+    Vector3 startPosition;
+    float reviveTime;
+    public Player player;
+
     void Start()
     {
-        
+        startPosition = transform.position;
+        reviveTime = reviveDelay;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        OnUpdate();
     }
 
-    internal void SetMovePoint(Vector3 point)
+    protected override void OnDeadUpdate()
     {
-        throw new NotImplementedException();
+        base.OnDeadUpdate();
+        if (reviveTime > 0)
+        {
+            reviveTime -= Time.deltaTime;
+        }
+        else
+        {
+            reviveTime = reviveDelay;
+            Revive();
+        }
+    }
+
+    protected override void OnAliveUpdate()
+    {
+        base.OnAliveUpdate();
+        if (focus != null)
+        {
+            if (!focus.hasInteract)
+            {
+                RemoveFocus();
+            }
+            else
+            {
+                float distance = Vector3.Distance(focus.interactionTransform.position, transform.position);
+                if (distance <= focus.radius)
+                {
+                    focus.Interact(gameObject);
+                }
+            }
+        }
+    }
+
+    protected override void Die()
+    {
+        base.Die();
+        gfx.SetActive(false);
+    }
+
+    protected override void Revive()
+    {
+        base.Revive();
+        transform.position = startPosition;
+        gfx.SetActive(true);
+        if (isServer)
+        {
+            motor.MoveToPoint(startPosition);
+        }
+    }
+
+    public void SetMovePoint(Vector3 point)
+    {
+        if (!isDead)
+        {
+            RemoveFocus();
+            motor.MoveToPoint(point);
+        }
+    }
+
+    public void SetNewFocus(Interactable newFocus)
+    {
+        if (!isDead)
+        {
+            if (newFocus.hasInteract) SetFocus(newFocus);
+        }
     }
 }

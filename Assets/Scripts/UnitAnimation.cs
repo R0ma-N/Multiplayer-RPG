@@ -12,17 +12,13 @@ sealed class UnitAnimation : MonoBehaviour {
         agent = GetComponentInParent<NavMeshAgent>();
     }
 
-    void FixedUpdate () {
+    void FixedUpdate () 
+    {
 		if (!agent.hasPath) {
             animator.SetBool(Move, false);
         } else {
             animator.SetBool(Move, true);
         }
-    }
-
-    public void Attack1()
-    {
-        animator.SetTrigger("Attack");
     }
 
     //Placeholder functions for Animation events
