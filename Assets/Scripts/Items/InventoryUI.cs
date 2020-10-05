@@ -2,19 +2,11 @@
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] GameObject inventoryUI;
-    [SerializeField] Transform itemsParent;
-    [SerializeField] InventorySlot slotPrefab;
-
-    InventorySlot[] slots;
-    Inventory inventory;
-
     #region Singleton
     public static InventoryUI instance;
 
     private void Awake()
     {
-        inventoryUI.SetActive(false);
         if (instance != null)
         {
             Debug.LogError("More than one instance of InventoryUI found!");
@@ -23,6 +15,18 @@ public class InventoryUI : MonoBehaviour
         instance = this;
     }
     #endregion
+
+    [SerializeField] GameObject inventoryUI;
+    [SerializeField] Transform itemsParent;
+    [SerializeField] InventorySlot slotPrefab;
+
+    InventorySlot[] slots;
+    Inventory inventory;
+
+    private void Start()
+    {
+        inventoryUI.SetActive(false);
+    }
 
     private void Update()
     {
@@ -56,4 +60,5 @@ public class InventoryUI : MonoBehaviour
             else slots[i].ClearSlot();
         }
     }
+
 }

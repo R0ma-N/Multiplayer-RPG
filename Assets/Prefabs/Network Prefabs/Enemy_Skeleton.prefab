@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 2433825409498762752}
   - component: {fileID: 2433825409498762767}
   - component: {fileID: 8208262906161103680}
+  - component: {fileID: 114264126044018530}
   - component: {fileID: 29120887651107782}
   m_Layer: 0
   m_Name: Enemy_Skeleton
@@ -443,6 +444,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0706005, y: 0.15488474, z: 0.033866882}
   m_Center: {x: 0, y: 0.07730967, z: 0.0037159808}
+--- !u!114 &114264126044018530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2433825409498762753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d98b3040c2560a645be10e20b361857c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropItems:
+  - item: {fileID: 11400000, guid: 6faf59747a73bbf4fbc083ff19ed3aa5, type: 2}
+    rate: 96.7
 --- !u!114 &29120887651107782
 MonoBehaviour:
   m_ObjectHideFlags: 0

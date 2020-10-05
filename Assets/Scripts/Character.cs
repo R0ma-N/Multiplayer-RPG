@@ -8,7 +8,7 @@ public class Character : Unit
 
     Vector3 startPosition;
     float reviveTime;
-    public Inventory inventory;
+    public Player player;
 
     void Start()
     {
@@ -70,12 +70,6 @@ public class Character : Unit
         {
             motor.MoveToPoint(startPosition);
         }
-    }
-    
-    public void SetInventory(Inventory inventory)
-    {
-        this.inventory = inventory;
-        inventory.dropPoint = transform;
     }
 
     public void SetMovePoint(Vector3 point)
