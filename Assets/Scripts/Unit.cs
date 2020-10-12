@@ -4,36 +4,46 @@ using UnityEngine.Networking;
 public class Unit : Interactable
 {
     [SerializeField] protected UnitMotor motor;
-    [SerializeField] protected UnitStats myStats;
+    [SerializeField] protected UnitStats _stats;
+    public UnitStats stats { get { return _stats; } }
 
     protected Interactable focus;
-    protected bool isDead;
+    protected bool isDie;
 
     public delegate void UnitDenegate();
     [SyncEvent] public event UnitDenegate EventOnDamage;
     [SyncEvent] public event UnitDenegate EventOnDie;
     [SyncEvent] public event UnitDenegate EventOnRevive;
 
+    public override void OnStartServer()
+    {
+        motor.SetMoveSpeed(_stats.moveSpeed.GetValue());
+        _stats.moveSpeed.onStatChanged += motor.SetMoveSpeed;
+    }
+
     void Update()
     {
         OnUpdate();
     }
 
-    protected virtual void OnAliveUpdate() { }
-    protected virtual void OnDeadUpdate() { }
+    protected virtual void OnLiveUpdate() { }
+    protected virtual void OnDieUpdate() { }
 
     protected void OnUpdate()
     {
         if (isServer)
         {
-            if (!isDead)
+            if (isServer)
             {
-                if (myStats.curHealth == 0) Die();
-                else OnAliveUpdate();
-            }
-            else
-            {
-                OnDeadUpdate();
+                if (!isDie)
+                {
+                    if (_stats.curHealth == 0) Die();
+                    else OnLiveUpdate();
+                }
+                else
+                {
+                    OnDieUpdate();
+                }
             }
         }
     }
@@ -43,7 +53,7 @@ public class Unit : Interactable
         Combat combat = user.GetComponent<Combat>();
         if (combat != null)
         {
-            if (combat.Attack(myStats))
+            if (combat.Attack(_stats))
             {
                 EventOnDamage();
                 return true;
@@ -70,7 +80,8 @@ public class Unit : Interactable
     [ClientCallback]
     protected virtual void Die()
     {
-        isDead = true;
+        isDie = true;
+        GetComponent<Collider>().enabled = false;
         if (isServer)
         {
             hasInteract = false;
@@ -90,11 +101,11 @@ public class Unit : Interactable
     [ClientCallback]
     protected virtual void Revive()
     {
-        isDead = false;
+        isDie = false;
         if (isServer)
         {
             hasInteract = true;
-            myStats.SetHealthRate(1);
+            _stats.SetHealthRate(1);
             EventOnRevive();
             RpcRevive();
         }

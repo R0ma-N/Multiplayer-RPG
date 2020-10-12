@@ -10,6 +10,9 @@ public class Character : Unit
     float reviveTime;
     public Player player;
 
+    new public PlayerStats stats { get { return _stats as PlayerStats; } }
+
+
     void Start()
     {
         startPosition = transform.position;
@@ -21,9 +24,9 @@ public class Character : Unit
         OnUpdate();
     }
 
-    protected override void OnDeadUpdate()
+    protected override void OnDieUpdate()
     {
-        base.OnDeadUpdate();
+        base.OnDieUpdate();
         if (reviveTime > 0)
         {
             reviveTime -= Time.deltaTime;
@@ -35,9 +38,9 @@ public class Character : Unit
         }
     }
 
-    protected override void OnAliveUpdate()
+    protected override void OnLiveUpdate()
     {
-        base.OnAliveUpdate();
+        base.OnLiveUpdate();
         if (focus != null)
         {
             if (!focus.hasInteract)
@@ -74,7 +77,7 @@ public class Character : Unit
 
     public void SetMovePoint(Vector3 point)
     {
-        if (!isDead)
+        if (!isDie)
         {
             RemoveFocus();
             motor.MoveToPoint(point);
@@ -83,7 +86,7 @@ public class Character : Unit
 
     public void SetNewFocus(Interactable newFocus)
     {
-        if (!isDead)
+        if (!isDie)
         {
             if (newFocus.hasInteract) SetFocus(newFocus);
         }

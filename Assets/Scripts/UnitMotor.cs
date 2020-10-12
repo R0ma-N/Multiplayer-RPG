@@ -7,7 +7,7 @@ public class UnitMotor : MonoBehaviour
     NavMeshAgent agent;
     Transform target;
 
-    void Start()
+    void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
     }
@@ -44,5 +44,10 @@ public class UnitMotor : MonoBehaviour
         agent.stoppingDistance = 0f;
         agent.ResetPath();
         target = null;
+    }
+
+    public void SetMoveSpeed(int speed)
+    {
+        agent.speed = speed;
     }
 }

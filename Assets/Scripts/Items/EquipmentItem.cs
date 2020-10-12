@@ -16,4 +16,27 @@ public class EquipmentItem : Item
         if (oldItem != null) player.inventory.AddItem(oldItem);
         base.Use(player);
     }
+
+    public virtual void Equip(Player player)
+    {
+        if (player != null)
+        {
+            UnitStats stats = player.character.stats;
+            stats.damage.AddModifier(damageModifier);
+            stats.armor.AddModifier(armorModifier);
+            stats.moveSpeed.AddModifier(speedModifier);
+        }
+    }
+
+    public virtual void Unequip(Player player)
+    {
+        if (player != null)
+        {
+            UnitStats stats = player.character.stats;
+            stats.damage.RemoveModifier(damageModifier);
+            stats.armor.RemoveModifier(armorModifier);
+            stats.moveSpeed.RemoveModifier(speedModifier);
+        }
+    }
+
 }

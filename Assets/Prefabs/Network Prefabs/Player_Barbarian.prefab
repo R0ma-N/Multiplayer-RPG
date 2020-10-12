@@ -52,6 +52,7 @@ GameObject:
   - component: {fileID: 6489249029352770283}
   - component: {fileID: 1861320616848058076}
   - component: {fileID: 8709928639225227818}
+  - component: {fileID: 114528977173305632}
   m_Layer: 0
   m_Name: Player_Barbarian
   m_TagString: Player
@@ -112,9 +113,10 @@ MonoBehaviour:
   interactionTransform: {fileID: 2243056174963970490}
   radius: 2
   motor: {fileID: 2243056174963970471}
-  myStats: {fileID: 114874726201545010}
+  _stats: {fileID: 0}
   reviveDelay: 5
   gfx: {fileID: 2243056173687296498}
+  player: {fileID: 0}
 --- !u!114 &2243056174963970471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,9 +269,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  curHealth: 0
   damage:
-    baseValue: 0
+    baseValue: 10
+  armor:
+    baseValue: 10
+  moveSpeed:
+    baseValue: 4
 --- !u!114 &6489249029352770283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,6 +316,21 @@ MonoBehaviour:
   animator: {fileID: 6262029526908967541}
   unit: {fileID: 1934549262967601637}
   combat: {fileID: 6489249029352770283}
+--- !u!114 &114528977173305632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2243056174963970491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abd5d4ebd7ac1aa4bbb759195df32955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
+  armor: 0
+  moveSpeed: 0
 --- !u!1001 &2243056174916519017
 PrefabInstance:
   m_ObjectHideFlags: 0

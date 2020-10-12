@@ -31,9 +31,9 @@ public class Enemy : Unit
         OnUpdate();
     }
 
-    protected override void OnDeadUpdate()
+    protected override void OnDieUpdate()
     {
-        base.OnDeadUpdate();
+        base.OnDieUpdate();
         if (reviveTime > 0)
         {
             reviveTime -= Time.deltaTime;
@@ -45,9 +45,9 @@ public class Enemy : Unit
         }
     }
 
-    protected override void OnAliveUpdate()
+    protected override void OnLiveUpdate()
     {
-        base.OnAliveUpdate();
+        base.OnLiveUpdate();
         if (focus == null)
         {
             Wandering(Time.deltaTime);
