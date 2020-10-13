@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(UnitMotor), typeof(EnemyStats))]
 
 public class Enemy : Unit
 {
-
     [Header("Movement")]
     [SerializeField] float moveRadius = 10f;
     [SerializeField] float minMoveDelay = 4f;
@@ -15,9 +15,12 @@ public class Enemy : Unit
 
     [Header("Behavior")]
     [SerializeField] bool aggressive;
+    [SerializeField] float rewardExp;
     [SerializeField] float viewDistance = 5f;
     [SerializeField] float reviveDelay = 5f;
+
     float reviveTime;
+    List<Character> enemies = new List<Character>();
 
     void Start()
     {
@@ -62,7 +65,7 @@ public class Enemy : Unit
             }
             else if (distance <= focus.radius)
             {
-                focus.Interact(gameObject);
+                if (!focus.Interact(gameObject)) RemoveFocus();
             }
         }
     }
@@ -74,6 +77,33 @@ public class Enemy : Unit
         if (isServer)
         {
             motor.MoveToPoint(startPosition);
+        }
+    }
+
+    protected override void Die()
+    {
+        base.Die();
+        if (isServer)
+        {
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                enemies[i].player.progress.AddExp(rewardExp / enemies.Count);
+            }
+            enemies.Clear();
+        }
+    }
+
+    void FindEnemy()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, viewDistance, 1 << LayerMask.NameToLayer("Player"));
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Interactable interactable = colliders[i].GetComponent<Interactable>();
+            if (interactable != null && interactable.hasInteract)
+            {
+                SetFocus(interactable);
+                break;
+            }
         }
     }
 
@@ -93,20 +123,6 @@ public class Enemy : Unit
         motor.MoveToPoint(curDistanation);
     }
 
-    void FindEnemy()
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, viewDistance, 1 << LayerMask.NameToLayer("Player"));
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            Interactable interactable = colliders[i].GetComponent<Interactable>();
-            if (interactable != null && interactable.hasInteract)
-            {
-                SetFocus(interactable);
-                break;
-            }
-        }
-    }
-
     public override bool Interact(GameObject user)
     {
         if (base.Interact(user))
@@ -115,6 +131,13 @@ public class Enemy : Unit
             return true;
         }
         return false;
+    }
+
+    protected override void DamageWithCombat(GameObject user)
+    {
+        base.DamageWithCombat(user);
+        Character character = user.GetComponent<Character>();
+        if (character != null && !enemies.Contains(character)) enemies.Add(character);
     }
 
     protected override void OnDrawGizmosSelected()

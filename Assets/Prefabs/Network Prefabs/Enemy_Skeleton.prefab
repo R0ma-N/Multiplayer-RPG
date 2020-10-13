@@ -365,11 +365,12 @@ MonoBehaviour:
   interactionTransform: {fileID: 2433825409498762870}
   radius: 2
   motor: {fileID: 2433825409498762760}
-  myStats: {fileID: 2433825409498762767}
+  _stats: {fileID: 0}
   moveRadius: 10
   minMoveDelay: 4
   maxMoveDelay: 12
   aggressive: 1
+  rewardExp: 80
   viewDistance: 5
   reviveDelay: 15
 --- !u!114 &2433825409498762761
@@ -428,9 +429,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 60
-  curHealth: 0
   damage:
-    baseValue: 10
+    _baseValue: 0
+  armor:
+    _baseValue: 0
+  moveSpeed:
+    _baseValue: 0
 --- !u!65 &8208262906161103680
 BoxCollider:
   m_ObjectHideFlags: 0

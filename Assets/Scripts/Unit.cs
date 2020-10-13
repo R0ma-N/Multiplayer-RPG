@@ -55,11 +55,16 @@ public class Unit : Interactable
         {
             if (combat.Attack(_stats))
             {
-                EventOnDamage();
-                return true;
+                DamageWithCombat(user);
             }
+            return true;
         }
         return base.Interact(user);
+    }
+
+    protected virtual void DamageWithCombat(GameObject user)
+    {
+        EventOnDamage();
     }
 
     protected virtual void SetFocus(Interactable newFocus)

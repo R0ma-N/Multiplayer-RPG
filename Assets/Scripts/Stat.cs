@@ -7,14 +7,22 @@ public class Stat
 {
     public event Action<int> onStatChanged;
 
-    [SerializeField]
-    private int baseValue;
+    [SerializeField] int _baseValue;
+    public int baseValue
+    {
+        get { return _baseValue; }
+        set
+        {
+            _baseValue = value;
+            if (onStatChanged != null) onStatChanged(GetValue());
+        }
+    }
 
     private List<int> modifiers = new List<int>();
 
     public int GetValue()
     {
-        int finalValue = baseValue;
+        int finalValue = _baseValue;
         modifiers.ForEach(x => finalValue += x);
         return finalValue;
     }
