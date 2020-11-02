@@ -1,53 +1,127 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class Unit : Interactable
 {
-    [SerializeField] protected UnitMotor motor;
-    [SerializeField] protected UnitStats _stats;
-    public UnitStats stats { get { return _stats; } }
+    public event Action EventOnDamage;
+    public event Action EventOnDie;
+    public event Action EventOnRevive;
 
-    protected Interactable focus;
-    protected bool isDie;
+    [SerializeField] private UnitMotor _motor;
+    [SerializeField] private UnitStats _stats;
 
-    public delegate void UnitDenegate();
-    [SyncEvent] public event UnitDenegate EventOnDamage;
-    [SyncEvent] public event UnitDenegate EventOnDie;
-    [SyncEvent] public event UnitDenegate EventOnRevive;
-
-    public override void OnStartServer()
+    public UnitMotor Motor
     {
-        motor.SetMoveSpeed(_stats.moveSpeed.GetValue());
-        _stats.moveSpeed.onStatChanged += motor.SetMoveSpeed;
+        get
+        {
+            return _motor;
+        }
+    }
+
+    public UnitStats Stats
+    {
+        get
+        {
+            return _stats;
+        }
+    }
+    public UnitSkills UnitSkills;
+
+    protected float _interactDistance;
+    protected bool _isDead;
+    protected Interactable _focus;
+    public Interactable Focus
+    {
+        get
+        {
+            return _focus;
+        }
     }
 
     void Update()
     {
         OnUpdate();
     }
-
-    protected virtual void OnLiveUpdate() { }
-    protected virtual void OnDieUpdate() { }
-
+    protected virtual void OnAliveUpdate() { }
+    protected virtual void OnDeadUpdate() { }
     protected void OnUpdate()
     {
         if (isServer)
         {
-            if (isServer)
+            if (!_isDead)
             {
-                if (!isDie)
+                if (_stats.CurHealth == 0)
                 {
-                    if (_stats.curHealth == 0) Die();
-                    else OnLiveUpdate();
+                    Die();
                 }
                 else
                 {
-                    OnDieUpdate();
+                    OnAliveUpdate();
                 }
+            }
+            else
+            {
+                OnDeadUpdate();
             }
         }
     }
 
+    [ClientRpc]
+    void RpcDie()
+    {
+        if (!isServer) Die();
+    }
+    [ClientRpc]
+    void RpcRevive()
+    {
+        if (!isServer) Revive();
+    }
+    protected virtual void Die()
+    {
+        _isDead = true;
+        GetComponent<Collider>().enabled = false;
+        EventOnDie();
+        if (isServer)
+        {
+            HasInteract = false;
+            RemoveFocus();
+            _motor.MoveToPoint(transform.position);
+            RpcDie();
+        }
+    }
+    protected virtual void Revive()
+    {
+        _isDead = false;
+        GetComponent<Collider>().enabled = true;
+        EventOnRevive();
+        if (isServer)
+        {
+            HasInteract = true;
+            _stats.SetHealthRate(1);
+            RpcRevive();
+        }
+    }
+    public virtual void SetFocus(Interactable newFocus)
+    {
+        if (newFocus != _focus)
+        {
+            _focus = newFocus;
+            _interactDistance = _focus.GetInteractDistance(gameObject);
+            _motor.FollowTarget(newFocus, _interactDistance);
+        }
+    }
+    public virtual void RemoveFocus()
+    {
+        _focus = null;
+        _motor.StopFollowingTarget();
+    }
+
+    public override float GetInteractDistance(GameObject user)
+    {
+        Combat combat = user.GetComponent<Combat>();
+        return base.GetInteractDistance(user) + (combat != null ? combat.AttackDistance : 0f);
+    }
     public override bool Interact(GameObject user)
     {
         Combat combat = user.GetComponent<Combat>();
@@ -61,64 +135,25 @@ public class Unit : Interactable
         }
         return base.Interact(user);
     }
-
+    public override void OnStartServer()
+    {
+        _motor.SetMoveSpeed(_stats.MoveSpeed.GetValue());
+        _stats.MoveSpeed.OnStatChanged += _motor.SetMoveSpeed;
+    }
     protected virtual void DamageWithCombat(GameObject user)
     {
         EventOnDamage();
     }
-
-    protected virtual void SetFocus(Interactable newFocus)
+    public void TakeDamage(GameObject user, int damage)
     {
-        if (newFocus != focus)
+        _stats.TakeDamage(damage);
+        DamageWithCombat(user);
+    }
+    public void UseSkill(int skillNum)
+    {
+        if (!_isDead && skillNum < UnitSkills.Count)
         {
-            focus = newFocus;
-            motor.FollowTarget(newFocus);
+            UnitSkills[skillNum].Use(this);
         }
-    }
-
-    protected virtual void RemoveFocus()
-    {
-        focus = null;
-        motor.StopFollowingTarget();
-    }
-
-    [ClientCallback]
-    protected virtual void Die()
-    {
-        isDie = true;
-        GetComponent<Collider>().enabled = false;
-        if (isServer)
-        {
-            hasInteract = false;
-            RemoveFocus();
-            motor.MoveToPoint(transform.position);
-            EventOnDie();
-            RpcDie();
-        }
-    }
-
-    [ClientRpc]
-    void RpcDie()
-    {
-        if (!isServer) Die();
-    }
-
-    [ClientCallback]
-    protected virtual void Revive()
-    {
-        isDie = false;
-        if (isServer)
-        {
-            hasInteract = true;
-            _stats.SetHealthRate(1);
-            EventOnRevive();
-            RpcRevive();
-        }
-    }
-
-    [ClientRpc]
-    void RpcRevive()
-    {
-        if (!isServer) Revive();
     }
 }

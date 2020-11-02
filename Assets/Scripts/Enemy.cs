@@ -6,100 +6,117 @@ using System.Collections.Generic;
 public class Enemy : Unit
 {
     [Header("Movement")]
-    [SerializeField] float moveRadius = 10f;
-    [SerializeField] float minMoveDelay = 4f;
-    [SerializeField] float maxMoveDelay = 12f;
-    Vector3 startPosition;
-    Vector3 curDistanation;
-    float changePosTime;
+    [SerializeField] private float _moveRadius = 10f;
+    [SerializeField] private float _minMoveDelay = 4f;
+    [SerializeField] private float _maxMoveDelay = 12f;
+    private Vector3 _startPosition;
+    private Vector3 _curDistanation;
+    private float _changePosTime;
 
     [Header("Behavior")]
-    [SerializeField] bool aggressive;
-    [SerializeField] float rewardExp;
-    [SerializeField] float viewDistance = 5f;
-    [SerializeField] float reviveDelay = 5f;
+    [SerializeField] private bool _aggressive;
+    [SerializeField] private float _rewardExp;
+    [SerializeField] private float _viewDistance = 8f;
+    [SerializeField] private float _agroDistance = 5f;
+    [SerializeField] private float _reviveDelay = 5f;
 
-    float reviveTime;
-    List<Character> enemies = new List<Character>();
+    private float _reviveTime;
+    private List<Character> _enemies = new List<Character>();
+
+    private Collider[] _bufferColliders = new Collider[64];
+    private int _targetColliders;
 
     void Start()
     {
-        startPosition = transform.position;
-        changePosTime = Random.Range(minMoveDelay, maxMoveDelay);
-        reviveTime = reviveDelay;
+        _startPosition = transform.position;
+        _changePosTime = Random.Range(_minMoveDelay, _maxMoveDelay);
+        _reviveTime = _reviveDelay;
     }
-
     void Update()
     {
         OnUpdate();
     }
-
-    protected override void OnDieUpdate()
+    protected override void OnDeadUpdate()
     {
-        base.OnDieUpdate();
-        if (reviveTime > 0)
+        base.OnDeadUpdate();
+        if (_reviveTime > 0)
         {
-            reviveTime -= Time.deltaTime;
+            _reviveTime -= Time.deltaTime;
         }
         else
         {
-            reviveTime = reviveDelay;
+            _reviveTime = _reviveDelay;
             Revive();
         }
     }
-
-    protected override void OnLiveUpdate()
+    protected override void OnAliveUpdate()
     {
-        base.OnLiveUpdate();
-        if (focus == null)
+        base.OnAliveUpdate();
+        if (_focus == null)
         {
             Wandering(Time.deltaTime);
-            if (aggressive) FindEnemy();
+            if (_aggressive) FindEnemy();
         }
         else
         {
-            float distance = Vector3.Distance(focus.interactionTransform.position, transform.position);
-            if (distance > viewDistance || !focus.hasInteract)
+            float distance = Vector3.Distance(_focus.InteractionTransform.position,
+            transform.position);
+            if (distance > _viewDistance || !_focus.HasInteract)
             {
                 RemoveFocus();
             }
-            else if (distance <= focus.radius)
+            else if (distance <= _interactDistance)
             {
-                if (!focus.Interact(gameObject)) RemoveFocus();
+                if (!_focus.Interact(gameObject))
+                {
+                    RemoveFocus();
+                }
             }
         }
     }
-
-    protected override void Revive()
+    void Wandering(float deltaTime)
     {
-        base.Revive();
-        transform.position = startPosition;
-        if (isServer)
+        _changePosTime -= deltaTime;
+        if (_changePosTime <= 0)
         {
-            motor.MoveToPoint(startPosition);
+            RandomMove();
+            _changePosTime = Random.Range(_minMoveDelay, _maxMoveDelay);
         }
     }
-
+    void RandomMove()
+    {
+        _curDistanation = Quaternion.AngleAxis(Random.Range(0f, 360f), Vector3.up) *
+        new Vector3(_moveRadius, 0, 0) + _startPosition;
+        Motor.MoveToPoint(_curDistanation);
+    }
     protected override void Die()
     {
         base.Die();
         if (isServer)
         {
-            for (int i = 0; i < enemies.Count; i++)
+            for (int i = 0; i < _enemies.Count; i++)
             {
-                enemies[i].player.progress.AddExp(rewardExp / enemies.Count);
+                _enemies[i].Player.Progress.AddExp(_rewardExp / _enemies.Count);
             }
-            enemies.Clear();
+            _enemies.Clear();
         }
     }
-
+    protected override void Revive()
+    {
+        transform.position = _startPosition;
+        base.Revive();
+        if (isServer)
+        {
+            Motor.MoveToPoint(_startPosition);
+        }
+    }
     void FindEnemy()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, viewDistance, 1 << LayerMask.NameToLayer("Player"));
-        for (int i = 0; i < colliders.Length; i++)
+        _targetColliders = Physics.OverlapSphereNonAlloc(transform.position, _agroDistance, _bufferColliders, 1 << LayerMask.NameToLayer("Player"));
+        for (int i = 0; i < _targetColliders; i++)
         {
-            Interactable interactable = colliders[i].GetComponent<Interactable>();
-            if (interactable != null && interactable.hasInteract)
+            Interactable interactable = _bufferColliders[i].GetComponent<Interactable>();
+            if (interactable != null && interactable.HasInteract)
             {
                 SetFocus(interactable);
                 break;
@@ -107,43 +124,24 @@ public class Enemy : Unit
         }
     }
 
-    void Wandering(float deltaTime)
-    {
-        changePosTime -= deltaTime;
-        if (changePosTime <= 0)
-        {
-            RandomMove();
-            changePosTime = Random.Range(minMoveDelay, maxMoveDelay);
-        }
-    }
-
-    void RandomMove()
-    {
-        curDistanation = Quaternion.AngleAxis(Random.Range(0f, 360f), Vector3.up) * new Vector3(moveRadius, 0, 0) + startPosition;
-        motor.MoveToPoint(curDistanation);
-    }
-
-    public override bool Interact(GameObject user)
-    {
-        if (base.Interact(user))
-        {
-            SetFocus(user.GetComponent<Interactable>());
-            return true;
-        }
-        return false;
-    }
-
     protected override void DamageWithCombat(GameObject user)
     {
         base.DamageWithCombat(user);
-        Character character = user.GetComponent<Character>();
-        if (character != null && !enemies.Contains(character)) enemies.Add(character);
+        Unit enemy = user.GetComponent<Unit>();
+        if (enemy != null)
+        {
+            SetFocus(enemy.GetComponent<Interactable>());
+            Character character = enemy as Character;
+            if (character != null && !_enemies.Contains(character))
+            {
+                _enemies.Add(character);
+            }
+        }
     }
-
     protected override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, viewDistance);
+        Gizmos.DrawWireSphere(transform.position, _viewDistance);
     }
 }

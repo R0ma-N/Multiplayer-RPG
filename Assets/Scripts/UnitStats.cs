@@ -3,35 +3,48 @@ using UnityEngine.Networking;
 
 public class UnitStats : NetworkBehaviour
 {
-    [SerializeField] int maxHealth;
-    [SyncVar] int _curHealth;
+    [SerializeField] protected int _maxHealth;
+    [SyncVar] protected int _curHealth;
+    public Stat Damage;
+    public Stat Armor;
+    public Stat MoveSpeed;
 
-    public Stat damage;
-    public Stat armor;
-    public Stat moveSpeed;
 
-    public int curHealth { get { return _curHealth; } }
-
-    public override void OnStartServer()
+    public virtual int CurHealth
     {
-        _curHealth = maxHealth;
+        get
+        {
+            return _curHealth;
+        }
+        protected set
+        {
+            _curHealth = value;
+        }
     }
 
     public virtual void TakeDamage(int damage)
     {
-        damage -= armor.GetValue();
+        damage -= Armor.GetValue();
         if (damage > 0)
         {
-            _curHealth -= damage;
-            if (_curHealth <= 0)
+            CurHealth -= damage;
+            if (CurHealth <= 0)
             {
-                _curHealth = 0;
+                CurHealth = 0;
             }
+        }
+    }
+    public void AddHealth(int amount)
+    {
+        CurHealth += amount;
+        if (CurHealth > _maxHealth)
+        {
+            CurHealth = _maxHealth;
         }
     }
 
     public void SetHealthRate(float rate)
     {
-        _curHealth = rate == 0 ? 0 : (int)(maxHealth / rate);
+        CurHealth = rate == 0 ? 0 : (int)(_maxHealth / rate);
     }
 }

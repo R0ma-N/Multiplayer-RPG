@@ -3,92 +3,113 @@
 [RequireComponent(typeof(UnitMotor), typeof(PlayerStats))]
 public class Character : Unit
 {
-    [SerializeField] float reviveDelay = 5f;
-    [SerializeField] GameObject gfx;
+    public Player Player;
 
-    Vector3 startPosition;
-    float reviveTime;
-    public Player player;
+    private Vector3 _startPosition;
+    private Vector3 _respawnPosition;
+    [SerializeField] private float _reviveDelay = 5f;
+    private float _reviveTime;
 
-    new public PlayerStats stats { get { return _stats as PlayerStats; } }
+    [SerializeField] private GameObject gfx;
 
+    new public PlayerStats Stats
+    {
+        get
+        {
+            return base.Stats as PlayerStats;
+        }
+    }
 
     void Start()
     {
-        startPosition = transform.position;
-        reviveTime = reviveDelay;
+        _startPosition = transform.position;
+        _reviveTime = _reviveDelay;
+
+        if (Stats.CurHealth == 0)
+        {
+            transform.position = _startPosition;
+            if (isServer)
+            {
+                Stats.SetHealthRate(1);
+                Motor.MoveToPoint(_startPosition);
+            }
+        }
     }
 
     void Update()
     {
         OnUpdate();
     }
-
-    protected override void OnDieUpdate()
+    protected override void OnAliveUpdate()
     {
-        base.OnDieUpdate();
-        if (reviveTime > 0)
+        base.OnAliveUpdate();
+        if (_focus != null)
         {
-            reviveTime -= Time.deltaTime;
-        }
-        else
-        {
-            reviveTime = reviveDelay;
-            Revive();
-        }
-    }
-
-    protected override void OnLiveUpdate()
-    {
-        base.OnLiveUpdate();
-        if (focus != null)
-        {
-            if (!focus.hasInteract)
+            if (!_focus.HasInteract)
             {
                 RemoveFocus();
             }
             else
             {
-                float distance = Vector3.Distance(focus.interactionTransform.position, transform.position);
-                if (distance <= focus.radius)
+                float distance = Vector3.Distance(_focus.InteractionTransform.position, transform.position);
+                if (distance <= _interactDistance)
                 {
-                    focus.Interact(gameObject);
+                    if (!_focus.Interact(gameObject))
+                    {
+                        RemoveFocus();
+                    }
                 }
             }
         }
     }
-
+    protected override void OnDeadUpdate()
+    {
+        base.OnDeadUpdate();
+        if (_reviveTime > 0)
+        {
+            _reviveTime -= Time.deltaTime;
+        }
+        else
+        {
+            _reviveTime = _reviveDelay;
+            Revive();
+        }
+    }
     protected override void Die()
     {
         base.Die();
         gfx.SetActive(false);
     }
-
     protected override void Revive()
     {
+        transform.position = _respawnPosition;
         base.Revive();
-        transform.position = startPosition;
         gfx.SetActive(true);
         if (isServer)
         {
-            motor.MoveToPoint(startPosition);
+            SetMovePoint(_respawnPosition);
         }
     }
 
     public void SetMovePoint(Vector3 point)
     {
-        if (!isDie)
+        if (!_isDead)
         {
-            RemoveFocus();
-            motor.MoveToPoint(point);
+            Motor.MoveToPoint(point);
         }
     }
-
     public void SetNewFocus(Interactable newFocus)
     {
-        if (!isDie)
+        if (!_isDead)
         {
-            if (newFocus.hasInteract) SetFocus(newFocus);
+            if (newFocus.HasInteract)
+            {
+                SetFocus(newFocus);
+            }
         }
+    }
+    public void SetRespawnPosition(Vector3 newPosition)
+    {
+        _respawnPosition = newPosition;
     }
 }
