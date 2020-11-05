@@ -2,16 +2,13 @@
 
 public class Equipment : NetworkBehaviour
 {
+    public Player Player;
     public event SyncList<Item>.SyncListChanged onItemChanged;
-    public SyncListItem items = new SyncListItem();
-
-    public Player player;
-
+    public SyncListItem Items = new SyncListItem();
     public override void OnStartLocalPlayer()
     {
-        items.Callback += ItemChanged;
+        Items.Callback += ItemChanged;
     }
-
     private void ItemChanged(SyncList<Item>.Operation op, int itemIndex)
     {
         onItemChanged(op, itemIndex);
@@ -20,34 +17,33 @@ public class Equipment : NetworkBehaviour
     public EquipmentItem EquipItem(EquipmentItem item)
     {
         EquipmentItem oldItem = null;
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < Items.Count; i++)
         {
-            if (((EquipmentItem)items[i]).equipSlot == item.equipSlot)
+            if (((EquipmentItem)Items[i]).equipSlot == item.equipSlot)
             {
-                oldItem = (EquipmentItem)items[i];
-                oldItem.Unequip(player);
-                items.RemoveAt(i);
+                oldItem = (EquipmentItem)Items[i];
+                oldItem.Unequip(Player);
+                Items.RemoveAt(i);
                 break;
             }
         }
-        items.Add(item);
-        item.Equip(player);
+        Items.Add(item);
+        item.Equip(Player);
 
         return oldItem;
     }
-
     public void UnequipItem(Item item)
     {
-        CmdUnequipItem(items.IndexOf(item));
+        CmdUnequipItem(Items.IndexOf(item));
     }
 
     [Command]
     void CmdUnequipItem(int index)
     {
-        if (items[index] != null && player.inventory.AddItem(items[index]))
+        if (Items[index] != null && Player.Inventory.AddItem(Items[index]))
         {
-            ((EquipmentItem)items[index]).Unequip(player);
-            items.RemoveAt(index);
+            ((EquipmentItem)Items[index]).Unequip(Player);
+            Items.RemoveAt(index);
         }
     }
 }

@@ -11,20 +11,19 @@ public class EquipmentItem : Item
 
     public override void Use(Player player)
     {
-        player.inventory.RemoveItem(this);
-        EquipmentItem oldItem = player.equipment.EquipItem(this);
-        if (oldItem != null) player.inventory.AddItem(oldItem);
+        player.Inventory.RemoveItem(this);
+        EquipmentItem oldItem = player.Equipment.EquipItem(this);
+        if (oldItem != null) player.Inventory.AddItem(oldItem);
         base.Use(player);
     }
-
     public virtual void Equip(Player player)
     {
         if (player != null)
         {
-            UnitStats stats = player.character.stats;
-            stats.damage.AddModifier(damageModifier);
-            stats.armor.AddModifier(armorModifier);
-            stats.moveSpeed.AddModifier(speedModifier);
+            UnitStats stats = player.Character.Stats;
+            stats.Damage.AddModifier(damageModifier);
+            stats.Armor.AddModifier(armorModifier);
+            stats.MoveSpeed.AddModifier(speedModifier);
         }
     }
 
@@ -32,10 +31,10 @@ public class EquipmentItem : Item
     {
         if (player != null)
         {
-            UnitStats stats = player.character.stats;
-            stats.damage.RemoveModifier(damageModifier);
-            stats.armor.RemoveModifier(armorModifier);
-            stats.moveSpeed.RemoveModifier(speedModifier);
+            UnitStats stats = player.Character.Stats;
+            stats.Damage.RemoveModifier(damageModifier);
+            stats.Armor.RemoveModifier(armorModifier);
+            stats.MoveSpeed.RemoveModifier(speedModifier);
         }
     }
 

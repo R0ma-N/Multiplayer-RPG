@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Unit))]
 public class UnitDrop : NetworkBehaviour
 {
-    [SerializeField] DropItem[] dropItems = new DropItem[0];
+    [SerializeField] DropItem[] _dropItems = new DropItem[0];
 
     public override void OnStartServer()
     {
@@ -13,22 +13,14 @@ public class UnitDrop : NetworkBehaviour
 
     private void Drop()
     {
-        for (int i = 0; i < dropItems.Length; i++)
+        for (int i = 0; i < _dropItems.Length; i++)
         {
-            if (Random.Range(0, 100f) <= dropItems[i].rate)
+            if (Random.Range(0, 100f) <= _dropItems[i].Rate)
             {
-                ItemPickup pickupItem = Instantiate(dropItems[i].item.pickupPrefab, transform.position, Quaternion.Euler(0, Random.Range(0, 360f), 0));
-                pickupItem.item = dropItems[i].item;
+                PickUpItem pickupItem = Instantiate(_dropItems[i].Item.pickUpPrefab, transform.position, Quaternion.Euler(0, Random.Range(0, 360f), 0));
+                pickupItem.Item = _dropItems[i].Item;
                 NetworkServer.Spawn(pickupItem.gameObject);
             }
         }
-    }
-
-    [System.Serializable]
-    struct DropItem
-    {
-        public Item item;
-        [Range(0, 100f)]
-        public float rate;
     }
 }

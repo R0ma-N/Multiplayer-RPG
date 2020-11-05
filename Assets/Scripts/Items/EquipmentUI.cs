@@ -3,63 +3,68 @@
 public class EquipmentUI : MonoBehaviour
 {
     #region Singleton
-    public static EquipmentUI instance;
+    public static EquipmentUI Instance;
 
     private void Awake()
     {
-        if (instance != null)
+        if (Instance != null)
         {
-            Debug.LogError("More than one instance of InventoryUI found!");
+            Debug.LogError("More than one instance of EquipmentUI found!");
             return;
         }
-        instance = this;
+        Instance = this;
     }
     #endregion
-
-    [SerializeField] GameObject equipmentUI;
+    [SerializeField] GameObject _equipmentUI;
     [Space]
-    [SerializeField] EquipmentSlot headSlot;
-    [SerializeField] EquipmentSlot chestSlot;
-    [SerializeField] EquipmentSlot legsSlot;
-    [SerializeField] EquipmentSlot righHandSlot;
-    [SerializeField] EquipmentSlot leftHandSlot;
+    [SerializeField] EquipmentSlot _headSlot;
+    [SerializeField] EquipmentSlot _chestSlot;
+    [SerializeField] EquipmentSlot _legsSlot;
+    [SerializeField] EquipmentSlot _rightHandSlot;
+    [SerializeField] EquipmentSlot _leftHandSlot;
 
-    Equipment equipment;
-    EquipmentSlot[] slots;
+    private Equipment _equipment;
+    private EquipmentSlot[] _slots;
 
     private void Start()
     {
-        equipmentUI.SetActive(false);
-        slots = new EquipmentSlot[System.Enum.GetValues(typeof(EquipmentSlotType)).Length];
-        slots[(int)EquipmentSlotType.Chest] = chestSlot;
-        slots[(int)EquipmentSlotType.Head] = headSlot;
-        slots[(int)EquipmentSlotType.LeftHand] = leftHandSlot;
-        slots[(int)EquipmentSlotType.Legs] = legsSlot;
-        slots[(int)EquipmentSlotType.RighHand] = righHandSlot;
+        _equipmentUI.SetActive(false);
+        _slots = new EquipmentSlot[System.Enum.GetValues(typeof(EquipmentSlotType)).Length];
+        _slots[(int)EquipmentSlotType.Chest] = _chestSlot;
+        _slots[(int)EquipmentSlotType.Head] = _headSlot;
+        _slots[(int)EquipmentSlotType.LeftHand] = _leftHandSlot;
+        _slots[(int)EquipmentSlotType.Legs] = _legsSlot;
+        _slots[(int)EquipmentSlotType.RightHand] = _rightHandSlot;
     }
 
     private void Update()
     {
         if (Input.GetButtonDown("Equipment"))
         {
-            equipmentUI.SetActive(!equipmentUI.activeSelf);
+            _equipmentUI.SetActive(!_equipmentUI.activeSelf);
         }
     }
 
     public void SetEquipment(Equipment newEquipment)
     {
-        equipment = newEquipment;
-        equipment.onItemChanged += ItemChanged;
-        for (int i = 0; i < slots.Length; i++) if (slots[i] != null) slots[i].equipment = equipment;
+        _equipment = newEquipment;
+        _equipment.onItemChanged += ItemChanged;
+        for (int i = 0; i < _slots.Length; i++)
+        {
+            if (_slots[i] != null)
+            {
+                _slots[i].equipment = _equipment;
+            }
+        }
         ItemChanged(0, 0);
     }
 
     private void ItemChanged(UnityEngine.Networking.SyncList<Item>.Operation op, int itemIndex)
     {
-        for (int i = 0; i < slots.Length; i++) slots[i].ClearSlot();
-        for (int i = 0; i < equipment.items.Count; i++)
+        for (int i = 0; i < _slots.Length; i++) _slots[i].ClearSlot();
+        for (int i = 0; i < _equipment.Items.Count; i++)
         {
-            slots[(int)((EquipmentItem)equipment.items[i]).equipSlot].SetItem(equipment.items[i]);
+            _slots[(int)((EquipmentItem)_equipment.Items[i]).equipSlot].SetItem(_equipment.Items[i]);
         }
     }
 }

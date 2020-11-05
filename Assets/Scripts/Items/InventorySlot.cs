@@ -3,36 +3,36 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
-    public Image icon;
-    public Button removeButton;
-    public Inventory inventory;
+    public Image Icon;
+    public Button RemoveButton;
+    public Inventory Inventory;
 
-    Item item;
+    private Item _item;
 
     public void SetItem(Item newItem)
     {
-        item = newItem;
-        icon.sprite = item.icon;
-        icon.enabled = true;
-        removeButton.interactable = true;
+        _item = newItem;
+        Icon.sprite = _item.icon;
+        Icon.enabled = true;
+        RemoveButton.interactable = true;
     }
 
     public void ClearSlot()
     {
-        item = null;
-        icon.sprite = null;
-        icon.enabled = false;
-        removeButton.interactable = false;
+        _item = null;
+        Icon.sprite = null;
+        Icon.enabled = false;
+        RemoveButton.interactable = false;
     }
 
     public void OnRemoveButton()
     {
-        inventory.DropItem(item);
+        Inventory.DropItem(_item);
     }
 
     public void UseItem()
     {
-        if (item != null) inventory.UseItem(item);
+        if (_item != null) Inventory.UseItem(_item);
     }
 }
 

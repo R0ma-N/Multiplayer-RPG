@@ -2,38 +2,47 @@
 
 public class PlayerStats : UnitStats
 {
-    StatsManager _manager;
-    public StatsManager manager
+    private StatsManager _manager;
+    public StatsManager Manager
     {
         set
         {
             _manager = value;
-            _manager.damage = damage.GetValue();
-            _manager.armor = armor.GetValue();
-            _manager.moveSpeed = moveSpeed.GetValue();
+            _manager.Damage = Damage.GetValue();
+            _manager.Armor = Armor.GetValue();
+            _manager.MoveSpeed = MoveSpeed.GetValue();
+        }
+    }
+
+    private void DamageChanged(int value)
+    {
+        if (_manager != null)
+        {
+            _manager.Damage = value;
+        }
+    }
+
+    private void ArmorChanged(int value)
+    {
+        if (_manager != null)
+        {
+            _manager.Armor = value;
+        }
+    }
+
+    private void MoveSpeedChanged(int value)
+    {
+        if (_manager != null)
+        {
+            _manager.MoveSpeed = value;
         }
     }
 
     public override void OnStartServer()
     {
         base.OnStartServer();
-        damage.onStatChanged += DamageChanged;
-        armor.onStatChanged += ArmorChanged;
-        moveSpeed.onStatChanged += MoveSpeedChanged;
-    }
-
-    private void DamageChanged(int value)
-    {
-        if (_manager != null) _manager.damage = value;
-    }
-
-    private void ArmorChanged(int value)
-    {
-        if (_manager != null) _manager.armor = value;
-    }
-
-    private void MoveSpeedChanged(int value)
-    {
-        if (_manager != null) _manager.moveSpeed = value;
+        Damage.OnStatChanged += DamageChanged;
+        Armor.OnStatChanged += ArmorChanged;
+        MoveSpeed.OnStatChanged += MoveSpeedChanged;
     }
 }

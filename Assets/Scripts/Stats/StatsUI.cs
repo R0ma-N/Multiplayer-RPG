@@ -4,43 +4,46 @@ using UnityEngine.UI;
 public class StatsUI : MonoBehaviour
 {
     #region Singleton
-    public static StatsUI instance;
+    public static StatsUI Instance;
 
     private void Awake()
     {
-        if (instance != null)
+        if (Instance != null)
         {
             Debug.LogError("More than one instance of StatsUI found!");
             return;
         }
-        instance = this;
+        Instance = this;
     }
     #endregion
+    [SerializeField] private GameObject _statsUI;
+    [SerializeField] private StatItem _damageStat;
+    [SerializeField] private StatItem _armorStat;
+    [SerializeField] private StatItem _moveSpeedStat;
+    [SerializeField] private Text _levelText;
+    [SerializeField] private Text _statPointsText;
 
-    [SerializeField] GameObject statsUI;
-    [SerializeField] Text levelText;
-    [SerializeField] Text statPointsText;
-    [SerializeField] StatItem damageStat;
-    [SerializeField] StatItem armorStat;
-    [SerializeField] StatItem moveSpeedStat;
-
-    StatsManager manager;
-    int curDamage, curArmor, curMoveSpeed;
-    int curLevel, curStatPoints;
-    float curExp, nextLevelExp;
+    private StatsManager _manager;
+    private int _curDamage;
+    private int _curArmor;
+    private int _curMoveSpeed;
+    private int _curLevel;
+    private int _curStatPoints;
+    private float _curExp;
+    private float _nextLevelExp;
 
     void Start()
     {
-        statsUI.SetActive(false);
+        _statsUI.SetActive(false);
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Stats"))
         {
-            statsUI.SetActive(!statsUI.activeSelf);
+            _statsUI.SetActive(!_statsUI.activeSelf);
         }
-        if (manager != null)
+        if (_manager != null)
         {
             CheckManagerChanges();
         }
@@ -48,60 +51,75 @@ public class StatsUI : MonoBehaviour
 
     public void SetManager(StatsManager statsManager)
     {
-        manager = statsManager;
+        _manager = statsManager;
         CheckManagerChanges();
     }
 
     private void CheckManagerChanges()
     {
-        if (curDamage != manager.damage)
+        if (_curDamage != _manager.Damage)
         {
-            curDamage = manager.damage;
-            damageStat.ChangeStat(curDamage);
+            _curDamage = _manager.Damage;
+            _damageStat.ChangeStat(_curDamage);
         }
-        if (curArmor != manager.armor)
+        if (_curArmor != _manager.Armor)
         {
-            curArmor = manager.armor;
-            armorStat.ChangeStat(curArmor);
+            _curArmor = _manager.Armor;
+            _armorStat.ChangeStat(_curArmor);
         }
-        if (curMoveSpeed != manager.moveSpeed)
+        if (_curMoveSpeed != _manager.MoveSpeed)
         {
-            curMoveSpeed = manager.moveSpeed;
-            moveSpeedStat.ChangeStat(curMoveSpeed);
+            _curMoveSpeed = _manager.MoveSpeed;
+            _moveSpeedStat.ChangeStat(_curMoveSpeed);
         }
-        if (curLevel != manager.level)
+        if (_curLevel != _manager.Level)
         {
-            curLevel = manager.level;
-            levelText.text = curLevel.ToString();
+            _curLevel = _manager.Level;
+            _levelText.text = _curLevel.ToString();
         }
-        if (curExp != manager.exp)
+        if (_curExp != _manager.Exp)
         {
-            curExp = manager.exp;
+            _curExp = _manager.Exp;
         }
-        if (nextLevelExp != manager.nextLevelExp)
+        if (_nextLevelExp != _manager.NextLevelExp)
         {
-            nextLevelExp = manager.nextLevelExp;
+            _nextLevelExp = _manager.NextLevelExp;
         }
-        if (curStatPoints != manager.statPoints)
+        if (_curStatPoints != _manager.StatPoints)
         {
-            curStatPoints = manager.statPoints;
-            statPointsText.text = curStatPoints.ToString();
-            if (curStatPoints > 0) SetUpgradableStats(true);
-            else SetUpgradableStats(false);
+            _curStatPoints = _manager.StatPoints;
+            _statPointsText.text = _curStatPoints.ToString();
+            if (_curStatPoints > 0)
+            {
+                SetUpgradableStats(true);
+            }
+            else
+            {
+                SetUpgradableStats(false);
+            }
         }
     }
 
     private void SetUpgradableStats(bool active)
     {
-        damageStat.SetUpgradable(active);
-        armorStat.SetUpgradable(active);
-        moveSpeedStat.SetUpgradable(active);
+        _damageStat.SetUpgradable(active);
+        _armorStat.SetUpgradable(active);
+        _moveSpeedStat.SetUpgradable(active);
     }
 
     public void UpgradeStat(StatItem stat)
     {
-        if (stat == damageStat) manager.CmdUpgradeStat((int)StatType.Damage);
-        else if (stat == armorStat) manager.CmdUpgradeStat((int)StatType.Armor);
-        else if (stat == moveSpeedStat) manager.CmdUpgradeStat((int)StatType.MoveSpeed);
+        if (stat == _damageStat)
+        {
+            _manager.CmdUpgradeStat((int)StatType.Damage);
+        }
+        else if (stat == _armorStat)
+        {
+            _manager.CmdUpgradeStat((int)StatType.Armor);
+        }
+        else if (stat == _moveSpeedStat)
+        {
+            _manager.CmdUpgradeStat((int)StatType.MoveSpeed);
+        }
     }
 }

@@ -2,31 +2,22 @@
 
 public class PlayerProgress : MonoBehaviour
 {
-    int _level = 1, _statPoints;
-    float _exp, _nextLevelExp = 100;
+    private int _level = 1;
+    private int _statPoints;
+    private float _exp;
+    private float _nextLevelExp = 100;
 
-    StatsManager _manager;
-    public StatsManager manager
+    private StatsManager _manager;
+    public StatsManager Manager
     {
         set
         {
             _manager = value;
-            _manager.exp = _exp;
-            _manager.nextLevelExp = _nextLevelExp;
-            _manager.level = _level;
-            _manager.statPoints = _statPoints;
+            _manager.Exp = _exp;
+            _manager.NextLevelExp = _nextLevelExp;
+            _manager.Level = _level;
+            _manager.StatPoints = _statPoints;
         }
-    }
-
-    public bool RemoveStatPoint()
-    {
-        if (_statPoints > 0)
-        {
-            _statPoints--;
-            if (_manager != null) _manager.statPoints = _statPoints;
-            return true;
-        }
-        return false;
     }
 
     public void AddExp(float addExp)
@@ -39,18 +30,26 @@ public class PlayerProgress : MonoBehaviour
         }
         if (_manager != null)
         {
-            _manager.exp = _exp;
-            _manager.level = _level;
-            _manager.nextLevelExp = _nextLevelExp;
-            _manager.statPoints = _statPoints;
+            _manager.Exp = _exp;
+            _manager.Level = _level;
+            _manager.NextLevelExp = _nextLevelExp;
+            _manager.StatPoints = _statPoints;
         }
     }
-
     private void LevelUP()
     {
         _level++;
         _nextLevelExp += 100f;
         _statPoints += 3;
     }
-
+    public bool RemoveStatPoint()
+    {
+        if (_statPoints > 0)
+        {
+            _statPoints--;
+            if (_manager != null) _manager.StatPoints = _statPoints;
+            return true;
+        }
+        return false;
+    }
 }

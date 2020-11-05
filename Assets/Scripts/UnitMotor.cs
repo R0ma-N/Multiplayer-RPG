@@ -4,50 +4,51 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class UnitMotor : MonoBehaviour 
 {
-    NavMeshAgent agent;
-    Transform target;
+    private NavMeshAgent _agent;
+    private Transform _target;
 
-    void Awake()
+    private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        _agent = gameObject.GetComponent<NavMeshAgent>();
     }
-
-    private void Update()
+    void Start()
     {
-        if (target != null)
-        {
-            if (agent.velocity.magnitude == 0) FaceTarget();
-            agent.SetDestination(target.position);
-        }
-    }
 
+    }
     public void MoveToPoint(Vector3 point)
     {
-        agent.SetDestination(point);
+        _agent.SetDestination(point);
     }
-
+    public void FollowTarget(Interactable newTarget)
+    {
+        _agent.stoppingDistance = newTarget.Radius;
+        _target = newTarget.InteractionTransform;
+    }
+    public void StopFollowingTarget()
+    {
+        _agent.stoppingDistance = 0f;
+        _agent.ResetPath();
+        _target = null;
+    }
+    private void Update()
+    {
+        if (_target != null)
+        {
+            if (_agent.velocity.magnitude == 0)
+            {
+                FaceTarget();
+            }
+            _agent.SetDestination(_target.position);
+        }
+    }
     private void FaceTarget()
     {
-        Vector3 direction = target.position - transform.position;
+        Vector3 direction = _target.position - transform.position;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
-
-    public void FollowTarget(Interactable newTarget)
-    {
-        agent.stoppingDistance = newTarget.radius;
-        target = newTarget.interactionTransform;
-    }
-
-    public void StopFollowingTarget()
-    {
-        agent.stoppingDistance = 0f;
-        agent.ResetPath();
-        target = null;
-    }
-
     public void SetMoveSpeed(int speed)
     {
-        agent.speed = speed;
+        _agent.speed = speed;
     }
 }

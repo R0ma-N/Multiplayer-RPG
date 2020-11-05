@@ -8,34 +8,16 @@ public class Unit : Interactable
     public event Action EventOnDie;
     public event Action EventOnRevive;
 
-    [SerializeField] private UnitMotor _motor;
-    [SerializeField] private UnitStats _stats;
-
-    public UnitMotor Motor
-    {
-        get
-        {
-            return _motor;
-        }
-    }
+    [SerializeField] protected UnitMotor _motor;
+    [SerializeField] protected UnitStats _stats;
+    protected bool _isDead;
+    protected Interactable _focus;
 
     public UnitStats Stats
     {
         get
         {
             return _stats;
-        }
-    }
-    public UnitSkills UnitSkills;
-
-    protected float _interactDistance;
-    protected bool _isDead;
-    protected Interactable _focus;
-    public Interactable Focus
-    {
-        get
-        {
-            return _focus;
         }
     }
 
@@ -102,25 +84,18 @@ public class Unit : Interactable
             RpcRevive();
         }
     }
-    public virtual void SetFocus(Interactable newFocus)
+    protected virtual void SetFocus(Interactable newFocus)
     {
         if (newFocus != _focus)
         {
             _focus = newFocus;
-            _interactDistance = _focus.GetInteractDistance(gameObject);
-            _motor.FollowTarget(newFocus, _interactDistance);
+            _motor.FollowTarget(newFocus);
         }
     }
-    public virtual void RemoveFocus()
+    protected virtual void RemoveFocus()
     {
         _focus = null;
         _motor.StopFollowingTarget();
-    }
-
-    public override float GetInteractDistance(GameObject user)
-    {
-        Combat combat = user.GetComponent<Combat>();
-        return base.GetInteractDistance(user) + (combat != null ? combat.AttackDistance : 0f);
     }
     public override bool Interact(GameObject user)
     {
@@ -143,17 +118,5 @@ public class Unit : Interactable
     protected virtual void DamageWithCombat(GameObject user)
     {
         EventOnDamage();
-    }
-    public void TakeDamage(GameObject user, int damage)
-    {
-        _stats.TakeDamage(damage);
-        DamageWithCombat(user);
-    }
-    public void UseSkill(int skillNum)
-    {
-        if (!_isDead && skillNum < UnitSkills.Count)
-        {
-            UnitSkills[skillNum].Use(this);
-        }
     }
 }

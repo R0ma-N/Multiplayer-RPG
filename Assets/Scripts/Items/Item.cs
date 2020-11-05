@@ -5,7 +5,7 @@ public class Item : ScriptableObject
 {
     new public string name = "New Item";
     public Sprite icon = null;
-    public ItemPickup pickupPrefab;
+    public PickUpItem pickUpPrefab;
 
     public virtual void Use(Player player)
     {

@@ -49,7 +49,7 @@ public class Skill : NetworkBehaviour
         if (CastDelay == 0 && CooldownDelay == 0)
         {
             _unit = unit;
-            _target = unit.Focus;
+            //_target = unit.Focus;
             OnUse();
         }
     }

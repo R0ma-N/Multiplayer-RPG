@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 
-public class ItemPickup : Interactable
+public class PickUpItem : Interactable
 {
-    public Item item;
-    public float lifetime;
+    public Item Item;
+    public float Lifetime;
 
     private void Update()
     {
         if (isServer)
         {
-            lifetime -= Time.deltaTime;
-            if (lifetime <= 0) Destroy(gameObject);
+            Lifetime -= Time.deltaTime;
+            if (Lifetime <= 0) Destroy(gameObject);
         }
     }
 
@@ -22,11 +22,11 @@ public class ItemPickup : Interactable
     public bool PickUp(GameObject user)
     {
         Character character = user.GetComponent<Character>();
-        if (character != null && character.player.inventory.AddItem(item))
+        if (character != null && character.Player.Inventory.AddItem(Item))
         {
             Destroy(gameObject);
             return true;
         }
-        else return false;
+        return false;
     }
 }

@@ -6,7 +6,6 @@ public class Character : Unit
     public Player Player;
 
     private Vector3 _startPosition;
-    private Vector3 _respawnPosition;
     [SerializeField] private float _reviveDelay = 5f;
     private float _reviveTime;
 
@@ -16,7 +15,7 @@ public class Character : Unit
     {
         get
         {
-            return base.Stats as PlayerStats;
+            return _stats as PlayerStats;
         }
     }
 
@@ -24,16 +23,6 @@ public class Character : Unit
     {
         _startPosition = transform.position;
         _reviveTime = _reviveDelay;
-
-        if (Stats.CurHealth == 0)
-        {
-            transform.position = _startPosition;
-            if (isServer)
-            {
-                Stats.SetHealthRate(1);
-                Motor.MoveToPoint(_startPosition);
-            }
-        }
     }
 
     void Update()
@@ -52,7 +41,7 @@ public class Character : Unit
             else
             {
                 float distance = Vector3.Distance(_focus.InteractionTransform.position, transform.position);
-                if (distance <= _interactDistance)
+                if (distance <= _focus.Radius)
                 {
                     if (!_focus.Interact(gameObject))
                     {
@@ -82,12 +71,12 @@ public class Character : Unit
     }
     protected override void Revive()
     {
-        transform.position = _respawnPosition;
+        transform.position = _startPosition;
         base.Revive();
         gfx.SetActive(true);
         if (isServer)
         {
-            SetMovePoint(_respawnPosition);
+            SetMovePoint(_startPosition);
         }
     }
 
@@ -95,7 +84,7 @@ public class Character : Unit
     {
         if (!_isDead)
         {
-            Motor.MoveToPoint(point);
+            _motor.MoveToPoint(point);
         }
     }
     public void SetNewFocus(Interactable newFocus)
@@ -107,9 +96,5 @@ public class Character : Unit
                 SetFocus(newFocus);
             }
         }
-    }
-    public void SetRespawnPosition(Vector3 newPosition)
-    {
-        _respawnPosition = newPosition;
     }
 }

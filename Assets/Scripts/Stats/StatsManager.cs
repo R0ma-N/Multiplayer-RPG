@@ -3,25 +3,32 @@ using UnityEngine.Networking;
 
 public class StatsManager : NetworkBehaviour
 {
-    [SyncVar] public int damage, armor, moveSpeed;
+    [SyncVar] public int Damage;
+    [SyncVar] public int Armor;
+    [SyncVar] public int MoveSpeed;
 
-    [SyncVar] public int level, statPoints;
-    [SyncVar] public float exp, nextLevelExp;
+    [SyncVar] public int Level;
+    [SyncVar] public int StatPoints;
+    [SyncVar] public float Exp;
+    [SyncVar] public float NextLevelExp;
 
-    public Player player;
+    public Player Player;
 
     [Command]
     public void CmdUpgradeStat(int stat)
     {
-        if (player.progress.RemoveStatPoint())
+        if (Player.Progress.RemoveStatPoint())
         {
             switch (stat)
             {
-                case (int)StatType.Damage: player.character.stats.damage.baseValue++; 
+                case (int)StatType.Damage:
+                    Player.Character.Stats.Damage.BaseValue++;
                     break;
-                case (int)StatType.Armor: player.character.stats.armor.baseValue++; 
+                case (int)StatType.Armor:
+                    Player.Character.Stats.Armor.BaseValue++;
                     break;
-                case (int)StatType.MoveSpeed: player.character.stats.moveSpeed.baseValue++; 
+                case (int)StatType.MoveSpeed:
+                    Player.Character.Stats.MoveSpeed.BaseValue++;
                     break;
             }
         }

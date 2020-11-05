@@ -5,43 +5,43 @@ using UnityEngine;
 [System.Serializable]
 public class Stat
 {
-    public event Action<int> onStatChanged;
+    public event Action<int> OnStatChanged;
+
+    private List<int> _modifiers = new List<int>();
 
     [SerializeField] int _baseValue;
-    public int baseValue
+    public int BaseValue
     {
-        get { return _baseValue; }
+        get
+        {
+            return _baseValue;
+        }
         set
         {
             _baseValue = value;
-            if (onStatChanged != null) onStatChanged(GetValue());
+            OnStatChanged?.Invoke(GetValue());
         }
     }
-
-    private List<int> modifiers = new List<int>();
-
     public int GetValue()
     {
         int finalValue = _baseValue;
-        modifiers.ForEach(x => finalValue += x);
+        _modifiers.ForEach(x => finalValue += x);
         return finalValue;
     }
-
     public void AddModifier(int modifier)
     {
         if (modifier != 0)
         {
-            modifiers.Add(modifier);
-            if (onStatChanged != null) onStatChanged(GetValue());
+            _modifiers.Add(modifier);
+            OnStatChanged?.Invoke(GetValue());
         }
     }
-
     public void RemoveModifier(int modifier)
     {
         if (modifier != 0)
         {
-            modifiers.Remove(modifier);
-            if (onStatChanged != null) onStatChanged(GetValue());
+            _modifiers.Remove(modifier);
+            OnStatChanged?.Invoke(GetValue());
         }
     }
 

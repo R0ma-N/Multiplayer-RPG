@@ -1,34 +1,33 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System;
 
 [RequireComponent(typeof(UnitStats))]
 public class Combat : NetworkBehaviour
 {
-    [SerializeField] float attackSpeed = 1f;
+    [SyncEvent] public event Action EventOnAttack;
 
-    UnitStats myStats;
-    float attackCooldown = 0f;
-
-    public delegate void CombatDenegate();
-    [SyncEvent] public event CombatDenegate EventOnAttack;
-
+    [SerializeField] private float _attackSpeed = 1f;
+    private float _attackCooldown = 0f;
+    private UnitStats myStats;
     void Start()
     {
         myStats = GetComponent<UnitStats>();
     }
-
     private void Update()
     {
-        if (attackCooldown > 0) attackCooldown -= Time.deltaTime;
+        if (_attackCooldown > 0)
+        {
+            _attackCooldown -= Time.deltaTime;
+        }
     }
-
     public bool Attack(UnitStats targetStats)
     {
-        if (attackCooldown <= 0)
+        if (_attackCooldown <= 0)
         {
-            targetStats.TakeDamage(myStats.damage.GetValue());
+            targetStats.TakeDamage(myStats.Damage.GetValue());
             EventOnAttack();
-            attackCooldown = 1f / attackSpeed;
+            _attackCooldown = 1f / _attackSpeed;
             return true;
         }
         return false;

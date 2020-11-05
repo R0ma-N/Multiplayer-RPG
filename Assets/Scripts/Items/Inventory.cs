@@ -3,70 +3,70 @@ using UnityEngine.Networking;
 
 public class Inventory : NetworkBehaviour
 {
-    public int space = 20;
-    public event SyncList<Item>.SyncListChanged onItemChanged;
+    public Player Player;
+    public int Space = 20;
+    public event SyncList<Item>.SyncListChanged OnItemChanged;
 
-    public Player player;
-    public SyncListItem items = new SyncListItem();
+    public SyncListItem Items = new SyncListItem();
 
     public override void OnStartLocalPlayer()
     {
-        items.Callback += ItemChanged;
+        Items.Callback += ItemChanged;
     }
 
     private void ItemChanged(SyncList<Item>.Operation op, int itemIndex)
     {
-        onItemChanged(op, itemIndex);
+        OnItemChanged(op, itemIndex);
     }
 
     public bool AddItem(Item item)
     {
-        if (items.Count < space)
+        if (Items.Count < Space)
         {
-            items.Add(item);
+            Items.Add(item);
             return true;
         }
         else return false;
     }
 
-    public void UseItem(Item item)
-    {
-        CmdUseItem(items.IndexOf(item));
-    }
-
-    [Command]
-    void CmdUseItem(int index)
-    {
-        if (items[index] != null)
-        {
-            items[index].Use(player);
-        }
-    }
-
     public void DropItem(Item item)
     {
-        CmdDropItem(items.IndexOf(item));
+        CmdDropItem(Items.IndexOf(item));
     }
 
     [Command]
     void CmdDropItem(int index)
     {
-        if (items[index] != null)
+        if (Items[index] != null)
         {
-            Drop(items[index]);
-            items.RemoveAt(index);
+            Drop(Items[index]);
+            Items.RemoveAt(index);
+        }
+    }
+
+    private void Drop(Item item)
+    {
+        PickUpItem pickupItem = Instantiate(item.pickUpPrefab, Player.Character.transform.position, Quaternion.Euler(0, Random.Range(0, 360f), 0));
+        pickupItem.Item = item;
+        NetworkServer.Spawn(pickupItem.gameObject);
+    }
+
+    public void UseItem(Item item)
+    {
+        CmdUseItem(Items.IndexOf(item));
+    }
+
+    [Command]
+    void CmdUseItem(int index)
+    {
+        if (Items[index] != null)
+        {
+            Items[index].Use(Player);
         }
     }
 
     public void RemoveItem(Item item)
     {
-        items.Remove(item);
-    }
-
-    private void Drop(Item item)
-    {
-        ItemPickup pickupItem = Instantiate(item.pickupPrefab, player.character.transform.position, Quaternion.Euler(0, Random.Range(0, 360f), 0));
-        pickupItem.item = item;
-        NetworkServer.Spawn(pickupItem.gameObject);
+        Items.Remove(item);
     }
 }
