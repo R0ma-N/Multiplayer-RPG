@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-public class JsonData<T>
+public class JsonData<T> : IData<T>
 {
     public void Save(T data, string path = null)
     {

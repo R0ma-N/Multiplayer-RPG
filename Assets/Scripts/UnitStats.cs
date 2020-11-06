@@ -8,16 +8,16 @@ public class UnitStats : NetworkBehaviour
     public Stat Damage;
     public Stat Armor;
     public Stat MoveSpeed;
-    public override void OnStartServer()
-    {
-        _curHealth = _maxHealth;
-    }
 
-    public int CurHealth
+    public virtual int CurHealth
     {
         get
         {
             return _curHealth;
+        }
+        protected set
+        {
+            _curHealth = value;
         }
     }
     public void SetHealthRate(float rate)

@@ -21,6 +21,6 @@ public struct SerializableUserObject
     }
     public override string ToString()
     {
-        return "UserName = {UserName}; Password = {Password}; Data = {Data};";
+        return $"UserName = {UserName}; Password = {Password}; Data = {Data};";
     }
 }
