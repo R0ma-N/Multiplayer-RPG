@@ -6,7 +6,7 @@ using System;
 public class Combat : NetworkBehaviour
 {
     [SyncEvent] public event Action EventOnAttack;
-
+    public float AttackDistance = 0f;
     [SerializeField] private float _attackSpeed = 1f;
     private float _attackCooldown = 0f;
     private UnitStats myStats;
