@@ -6,8 +6,8 @@ public class Skill : NetworkBehaviour
 {
     public Sprite icon;
 
-    [SerializeField] protected float _castTime = 1f;
-    [SerializeField] protected float _cooldown = 1f;
+    [SerializeField] private float _castTime = 1f;
+    [SerializeField] private float _cooldown = 1f;
     [HideInInspector] public float CastDelay;
     [HideInInspector] public float CooldownDelay;
     protected Unit _unit;
@@ -49,7 +49,7 @@ public class Skill : NetworkBehaviour
         if (CastDelay == 0 && CooldownDelay == 0)
         {
             _unit = unit;
-            //_target = unit.Focus;
+            _target = unit.Focus;
             OnUse();
         }
     }
