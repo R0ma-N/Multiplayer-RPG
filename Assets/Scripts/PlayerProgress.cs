@@ -4,6 +4,7 @@ public class PlayerProgress : MonoBehaviour
 {
     private int _level = 1;
     private int _statPoints;
+    private int _skillPoints;
     private float _exp;
     private float _nextLevelExp = 100;
 
@@ -19,6 +20,8 @@ public class PlayerProgress : MonoBehaviour
             _manager.NextLevelExp = _nextLevelExp;
             _manager.Level = _level;
             _manager.StatPoints = _statPoints;
+            _manager.SkillPoints = _skillPoints;
+
         }
     }
     public void Load(UserData data)
@@ -30,6 +33,7 @@ public class PlayerProgress : MonoBehaviour
         }
 
         _statPoints = _data.StatPoints;
+        _skillPoints = _data.SkillPoints;
         _exp = _data.Exp;
         if (_data.NextLevelExp > 0)
         {
@@ -50,6 +54,7 @@ public class PlayerProgress : MonoBehaviour
             _manager.Level = _level;
             _manager.NextLevelExp = _nextLevelExp;
             _manager.StatPoints = _statPoints;
+            _manager.SkillPoints = _skillPoints;
         }
     }
     private void LevelUP()
@@ -57,6 +62,7 @@ public class PlayerProgress : MonoBehaviour
         _data.Level = ++_level;
         _data.NextLevelExp = _nextLevelExp += 100f;
         _data.StatPoints = _statPoints += 3;
+        _data.SkillPoints = _skillPoints += 1;
     }
     public bool RemoveStatPoint()
     {
@@ -64,6 +70,20 @@ public class PlayerProgress : MonoBehaviour
         {
             _data.StatPoints = --_statPoints;
             if (_manager != null) _manager.StatPoints = _statPoints;
+            return true;
+        }
+        return false;
+    }
+    public bool RemoveSkillPoint()
+    {
+        if (_skillPoints > 0)
+        {
+            _data.SkillPoints = --_skillPoints;
+            if (_manager != null)
+            {
+                _manager.SkillPoints = _skillPoints;
+            }
+
             return true;
         }
         return false;

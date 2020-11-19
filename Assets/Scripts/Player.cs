@@ -80,6 +80,9 @@ public class Player : MonoBehaviour
             InventoryUI.Instance.SetInventory(_inventory);
             EquipmentUI.Instance.SetEquipment(_equipment);
             StatsUI.Instance.SetManager(_statsManager);
+            SkillsPanel.Instance.SetSkills(character.UnitSkills);
+            SkillTree.Instance.SetCharacter(character);
+            SkillTree.Instance.SetManager(_statsManager);
         }
     }
 }
