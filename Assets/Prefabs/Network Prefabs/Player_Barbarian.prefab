@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 1746308392768455037}
   - component: {fileID: 7252193893418531767}
   - component: {fileID: 17499644831520111}
+  - component: {fileID: 114925739023743558}
   m_Layer: 0
   m_Name: Player_Barbarian
   m_TagString: Player
@@ -342,6 +343,7 @@ MonoBehaviour:
   MoveSpeed: 0
   Level: 0
   StatPoints: 0
+  SkillPoints: 0
   Exp: 0
   NextLevelExp: 0
   Player: {fileID: 0}
@@ -362,6 +364,8 @@ MonoBehaviour:
   _cooldown: 1
   CastDelay: 0
   CooldownDelay: 0
+  _initialCastTime: 10
+  _castTimeLimit: 1
   _hideEffect: {fileID: 7819686051008131400, guid: eba39860ab593494fb2950fcda0730c5,
     type: 3}
 --- !u!114 &7252193893418531767
@@ -382,7 +386,8 @@ MonoBehaviour:
   CastDelay: 0
   CooldownDelay: 0
   _range: 7
-  _damage: 25
+  _baseDamage: 25
+  _damageByLevel: 3
   _doubleShotEffect: {fileID: 1056997232414683985, guid: be2ad852e34a73746a9b8e425d3ccb3a,
     type: 3}
 --- !u!114 &17499644831520111
@@ -403,11 +408,27 @@ MonoBehaviour:
   CastDelay: 0
   CooldownDelay: 0
   _range: 7
-  _damage: 25
+  _baseDamage: 25
+  _damageByLevel: 5
   _castEffect: {fileID: 4089272619685500971, guid: 833f82ad8823ddf49839034aa5ccad3f,
     type: 3}
   _aimingShotEffect: {fileID: 7797237467460171039, guid: 3d8a8f8c72b9f1e41930d58de682ed4b,
     type: 3}
+--- !u!114 &114925739023743558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2243056174963970491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd6fe090e6315446a74784f05ada8f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderer: {fileID: 6262029526914176880}
+  clientMaterial: {fileID: 2100002, guid: bc0da17664eea18408b37d04585188bb, type: 3}
+  hostMaterial: {fileID: 2100000, guid: f03cb40262e30234e895e85ea8929f3e, type: 3}
 --- !u!1001 &126471297501899118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -751,3 +772,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c336897268dbd1b4b8a3645491af5e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!137 &6262029526914176880 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5316460987289654041, guid: edcb7ca4497a4a545800682d51938d39,
+    type: 3}
+  m_PrefabInstance: {fileID: 2243056174916519017}
+  m_PrefabAsset: {fileID: 0}
